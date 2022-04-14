@@ -49,6 +49,7 @@
 #include <QTimer>
 #include <QXYSeries>
 #include <QtNetwork/QUdpSocket>
+#include <QDateTime>
 
 namespace Ui
 {
@@ -126,6 +127,11 @@ private:
     std::map<int, QtCharts::QChartView *> m_plotsConstellation;
     std::map<int, QtCharts::QChartView *> m_plotsCn0;
     std::map<int, QtCharts::QChartView *> m_plotsDoppler;
+
+    // savefile
+    QFile *m_saveFile;
+    QTextStream *m_textOut;
+    QDateTime m_systemTime;
 };
 
 #endif  // GNSS_SDR_MONITOR_MAIN_WINDOW_H_

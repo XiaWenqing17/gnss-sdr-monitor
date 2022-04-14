@@ -148,6 +148,40 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionAbout, &QAction::triggered, this, &MainWindow::about);
     connect(ui->actionAboutQt, &QAction::triggered, qApp, &QApplication::aboutQt);
 
+    // open savefile
+    m_saveFile = new QFile("/home/a123/gnss-sdr/workspace/monitor/savefile.csv");
+    if(! m_saveFile->open(QIODevice::WriteOnly | QIODevice::Text))
+        qDebug()<<m_saveFile->errorString();
+    qDebug() << "open savefile";
+    m_textOut = new QTextStream(m_saveFile);
+    *m_textOut << "dateTime,"
+                  "system,"
+                  "signal,"
+                  "prn,"
+                  "channel_id,"
+                  "acq_delay_samples,"
+                  "acq_doppler_hz,"
+                  "acq_samplestamp_samples,"
+                  "acq_doppler_step,"
+                  "flag_valid_acquisition,"
+                  "fs,"
+                  "prompt_i,"
+                  "prompt_q,"
+                  "cn0_db_hz,"
+                  "carrier_doppler_hz,"
+                  "carrier_phase_rads,"
+                  "code_phase_samples,"
+                  "tracking_sample_counter,"
+                  "flag_valid_symbol_output,"
+                  "correlation_length_ms,"
+                  "flag_valid_word,"
+                  "tow_at_current_symbol_ms,"
+                  "pseudorange_m,"
+                  "rx_time,"
+                  "flag_valid_pseudorange,"
+                  "interp_tow_ms,"
+                  "\n";
+
     // Load settings from last session.
     loadSettings();
 }
@@ -219,6 +253,69 @@ void MainWindow::receiveGnssSynchro()
             m_model->populateChannels(&m_stocks);
             m_clear->setEnabled(true);
         }
+
+        // save file
+        QString tmpString;
+        m_systemTime = QDateTime::currentDateTime();
+        for (int i = 0; i < m_stocks.observable_size(); i++)
+            if(m_stocks.observable(i).fs() != 0){
+                *m_textOut << m_systemTime.toString("yyyy-MM-dd hh:mm:ss.zzz") << ",";
+
+                tmpString = " ";
+                if(m_stocks.observable(i).system() == "G")
+                    tmpString = "GPS";
+                if(m_stocks.observable(i).system() == "R")
+                    tmpString = "Glonass";
+                if(m_stocks.observable(i).system() == "S")
+                    tmpString = "SBAS";
+                if(m_stocks.observable(i).system() == "E")
+                    tmpString = "Galileo";
+                if(m_stocks.observable(i).system() == "C")
+                    tmpString = "Beidou";
+                *m_textOut << tmpString << ",";
+
+                tmpString = " ";
+                if(m_stocks.observable(i).signal() == "1C")
+                    tmpString = "GPS L1 C/A";
+                if(m_stocks.observable(i).signal() == "1B")
+                    tmpString = "Galileo E1b/c";
+                if(m_stocks.observable(i).signal() == "1G")
+                    tmpString = "Glonass L1 C/A";
+                if(m_stocks.observable(i).signal() == "2S")
+                    tmpString = "GPS L2 L2C(M)";
+                if(m_stocks.observable(i).signal() == "2G")
+                    tmpString = "Glonass L2 C/A";
+                if(m_stocks.observable(i).signal() == "L5")
+                    tmpString = "GPS L5";
+                if(m_stocks.observable(i).signal() == "5X")
+                    tmpString = "Galileo E5a";
+                *m_textOut << tmpString << ",";
+
+                *m_textOut << m_stocks.observable(i).prn() << ",";
+                *m_textOut << m_stocks.observable(i).channel_id() << ",";
+                *m_textOut << m_stocks.observable(i).acq_delay_samples() << ",";
+                *m_textOut << m_stocks.observable(i).acq_doppler_hz() << ",";
+                *m_textOut << m_stocks.observable(i).acq_samplestamp_samples() << ",";
+                *m_textOut << m_stocks.observable(i).acq_doppler_step() << ",";
+                *m_textOut << m_stocks.observable(i).flag_valid_acquisition() << ",";
+                *m_textOut << m_stocks.observable(i).fs() << ",";
+                *m_textOut << m_stocks.observable(i).prompt_i() << ",";
+                *m_textOut << m_stocks.observable(i).prompt_q() << ",";
+                *m_textOut << m_stocks.observable(i).cn0_db_hz() << ",";
+                *m_textOut << m_stocks.observable(i).carrier_doppler_hz() << ",";
+                *m_textOut << m_stocks.observable(i).carrier_phase_rads() << ",";
+                *m_textOut << m_stocks.observable(i).code_phase_samples() << ",";
+                *m_textOut << m_stocks.observable(i).tracking_sample_counter() << ",";
+                *m_textOut << m_stocks.observable(i).flag_valid_symbol_output() << ",";
+                *m_textOut << m_stocks.observable(i).correlation_length_ms() << ",";
+                *m_textOut << m_stocks.observable(i).flag_valid_word() << ",";
+                *m_textOut << m_stocks.observable(i).tow_at_current_symbol_ms() << ",";
+                *m_textOut << m_stocks.observable(i).pseudorange_m() << ",";
+                *m_textOut << m_stocks.observable(i).rx_time() << ",";
+                *m_textOut << m_stocks.observable(i).flag_valid_pseudorange() << ",";
+                *m_textOut << m_stocks.observable(i).interp_tow_ms() << ",";
+                *m_textOut << "\n";
+            }
     }
     if (newData && !m_updateTimer.isActive())
     {
@@ -253,7 +350,12 @@ void MainWindow::clearEntries()
     m_clear->setEnabled(false);
 }
 
-void MainWindow::quit() { saveSettings(); }
+void MainWindow::quit()
+{
+    saveSettings();
+    m_saveFile->close();
+    qDebug() << "close savefile";
+}
 
 gnss_sdr::Observables MainWindow::readGnssSynchro(char buff[], int bytes)
 {
