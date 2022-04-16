@@ -180,6 +180,7 @@ MainWindow::MainWindow(QWidget *parent)
                   "rx_time,"
                   "flag_valid_pseudorange,"
                   "interp_tow_ms,"
+                  "evm,"
                   "\n";
 
     // Load settings from last session.
@@ -314,6 +315,7 @@ void MainWindow::receiveGnssSynchro()
                 *m_textOut << m_stocks.observable(i).rx_time() << ",";
                 *m_textOut << m_stocks.observable(i).flag_valid_pseudorange() << ",";
                 *m_textOut << m_stocks.observable(i).interp_tow_ms() << ",";
+                *m_textOut << m_stocks.observable(i).evm() << ",";
                 *m_textOut << "\n";
             }
     }
