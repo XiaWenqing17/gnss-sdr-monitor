@@ -181,6 +181,7 @@ MainWindow::MainWindow(QWidget *parent)
                   "flag_valid_pseudorange,"
                   "interp_tow_ms,"
                   "evm,"
+                  "scb,"
                   "\n";
 
     // Load settings from last session.
@@ -316,6 +317,7 @@ void MainWindow::receiveGnssSynchro()
                 *m_textOut << m_stocks.observable(i).flag_valid_pseudorange() << ",";
                 *m_textOut << m_stocks.observable(i).interp_tow_ms() << ",";
                 *m_textOut << m_stocks.observable(i).evm() << ",";
+                *m_textOut << m_stocks.observable(i).scb() << ",";
                 *m_textOut << "\n";
             }
     }
