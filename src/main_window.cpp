@@ -182,6 +182,9 @@ MainWindow::MainWindow(QWidget *parent)
                   "interp_tow_ms,"
                   "evm,"
                   "scb,"
+                  "acq_test_statistics,"
+                  "carr_phase_error_hz,"
+                  "code_error_chips,"
                   "\n";
 
     // Load settings from last session.
@@ -318,6 +321,9 @@ void MainWindow::receiveGnssSynchro()
                 *m_textOut << m_stocks.observable(i).interp_tow_ms() << ",";
                 *m_textOut << m_stocks.observable(i).evm() << ",";
                 *m_textOut << m_stocks.observable(i).scb() << ",";
+                *m_textOut << m_stocks.observable(i).acq_test_statistics() << ",";
+                *m_textOut << m_stocks.observable(i).carr_phase_error_hz() << ",";
+                *m_textOut << m_stocks.observable(i).code_error_chips() << ",";
                 *m_textOut << "\n";
             }
     }
