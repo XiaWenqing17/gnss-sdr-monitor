@@ -86,6 +86,7 @@ public slots:
     void closePlots();
     void deletePlots();
     void about();
+    void createNewFile();
 
 protected:
     void closeEvent(QCloseEvent *event) override;
@@ -121,6 +122,7 @@ private:
     QAction *m_stop;
     QAction *m_clear;
     QAction *m_closePlotsAction;
+    QAction *m_newFile;
 
     int m_bufferSize;
 
@@ -131,7 +133,7 @@ private:
     // savefile
     QFile *m_saveFile;
     QTextStream *m_textOut;
-    QDateTime m_systemTime;
+    int fileCnt;
 };
 
 #endif  // GNSS_SDR_MONITOR_MAIN_WINDOW_H_
