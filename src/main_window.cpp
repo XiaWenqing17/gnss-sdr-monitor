@@ -295,6 +295,10 @@ void MainWindow::receiveGnssSynchro()
                     *m_textOut << m_stocks.observable(i).carr_phase_error_hz() << ",";
                     *m_textOut << m_stocks.observable(i).code_error_chips() << ",";
                     *m_textOut << m_stocks.observable(i).carrier_lock_test() << ",";
+                    *m_textOut << m_stocks.observable(i).early_i() << ",";
+                    *m_textOut << m_stocks.observable(i).early_q() << ",";
+                    *m_textOut << m_stocks.observable(i).late_i() << ",";
+                    *m_textOut << m_stocks.observable(i).late_q() << ",";
                     *m_textOut << "\n";
                 }
         }
@@ -682,6 +686,10 @@ void MainWindow::createNewFile()
                           "carr_phase_error_hz,"
                           "code_error_chips,"
                           "carrier_lock_test,"
+                          "early_i,"
+                          "early_q,"
+                          "late_i,"
+                          "late_q,"
                           "\n";
             break;
         }
