@@ -299,6 +299,7 @@ void MainWindow::receiveGnssSynchro()
                     *m_textOut << m_stocks.observable(i).early_q() << ",";
                     *m_textOut << m_stocks.observable(i).late_i() << ",";
                     *m_textOut << m_stocks.observable(i).late_q() << ",";
+                    *m_textOut << m_stocks.observable(i).scb_r() << ",";
                     *m_textOut << "\n";
                 }
         }
@@ -690,6 +691,7 @@ void MainWindow::createNewFile()
                           "early_q,"
                           "late_i,"
                           "late_q,"
+                          "scb_r,"
                           "\n";
             break;
         }
